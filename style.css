@@ -23,3 +23,23 @@ h1 {
 
 }
 
+#search-form button {
+  background-color: #c8e0f4;
+  color: #2d2c2c;
+  border: none;
+  border-radius: 7px;
+  padding: 6px 14px;
+  font-family: inherit;
+  font-size: .85rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+#search-form button:hover {
+  background-color: #6aaff5;
+}
+
+#search-form button:active {
+  background-color: #135aab;
+  transform: scale(0.97);
+}
