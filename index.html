@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherMap</title>
+    <!-- الخط من Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+     <!-- مكتبة الخريطة  -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <!-- CSS-->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+     <header>
+    <h1>WeatherMap</h1> </header>
+<main>
+    <form id="search-form">
+      <label for="city-input">City name</label>
+      <input type="text" id="city-input" placeholder="e.g. Port Sudan" required>
+      <button type="submit">Get Weather</button>
+    </form>
+    <!-- أماكن فاضية بيملاها JavaScript-->
+    <div id="message-box"></div>
+    <div id="loader"></div>
+
+    <div id="map"></div>
+
+</main> 
+<!-- المكتبة    -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
