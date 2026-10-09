@@ -101,3 +101,28 @@ h1 {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
+#message-box {
+  display: none;
+  max-width: 600px;
+  margin: 16px auto;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #2b3a49;
+  border-left: 5px solid transparent;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+#message-box.visible {
+  display: block;
+}
+
+#message-box.error {
+  background-color: #f27474;
+  border-left-color: #fe202f;
+}
+
+#message-box.info {
+  background-color: #e8f1fb;
+  border-left-color: #2c92c1;
+}
