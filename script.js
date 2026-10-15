@@ -1,3 +1,4 @@
+const API_KEY = '868ff817f39bfd9eca2e584bd870a1de';
 const map = L.map('map').setView([15.5007, 32.5599], 6);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
@@ -15,39 +16,75 @@ formWeather.addEventListener('submit',async function (event) {
   if (city === '') {
    return;
  }
-  try{
-  const cityCoordinates = await getCityCoordinates(city);
-  console.log(cityCoordinates);
- } catch (error) {
-  console.error('Unable to find city coordinates:', error);
- }
- });
+
+ // تجربة الطلبين بالتتابع مع التقاط أي خطأ
+ try {
+    // الطلب الأول: الحصول على الإحداثيات
+    const cityCoordinates = await getCityCoordinates(city);
+      // إيقاف التنفيذ إذا لم توجد المدينة
+    if (cityCoordinates === null) {
+      console.log('City not found');
+      return;
+    }
+  // الطلب الثاني: الحصول على الطقس بعد نجاح الأول
+    const weatherData = await getWeatherData(cityCoordinates);
+    console.log(weatherData);
+      // طباعة الخطأ في الـ Console
+  } catch (error) {
+    console.error('Error fetching weather data:', error);
+  }
+});
+
+  // دالة تحوّل اسم المدينة إلى إحداثيات باستخدام Nominatim
 
  async function getCityCoordinates(cityName) {
-  // 1. ابني الرابط
+  // بناء رابط البحث مع تشفير اسم المدينة لتفادي مشاكل المسافات والحروف العربية
   const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(cityName)}`;
-  // 2. fetch
+  // إرسال الطلب وانتظار الرد
   const response = await fetch(url);
 
-  // 3. تأكدي من response.ok
+  // اعلام بالخطأ إذا فشل الطلب
  if (!response.ok) {
     throw new Error('Request failed');
   }
 
-  // 4. حولي الرد لـ JSON
+  // 4. حول الرد لـ JSON
   const data = await response.json();
 
-  // 5. لو المصفوفة فاضية، ارجعي بـ null
+  // 5. لو المصفوفة فاضية، رجع بـ null
   if (data.length === 0) {
     return null;
   }
 
-  // 6. ارجعي بـ lat و lon كأرقام
+  // إرجاع خط العرض والطول كأرقام   
   return {
     lat: parseFloat(data[0].lat),
     lon: parseFloat(data[0].lon)
   };
 }
+// دالة تجلب الطقس الحالي من OpenWeatherMap بحسب الإحداثيات
+
+async function getWeatherData(cityCoordinates) {
+    // بناء الرابط بوحدة القياس المترية 
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${encodeURIComponent(cityCoordinates.lat)}&lon=${encodeURIComponent(cityCoordinates.lon)}&appid=${API_KEY}&units=metric`;
+    //  خطأ إذا فشل الطلب
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error('Weather request failed');
+  }
+    // استخراج القيم المطلوبة فقط من الرد المتداخل
+  const data = await response.json();
+  return {
+  name: data.name,
+  temp: data.main.temp,
+  humidity: data.main.humidity,
+  windSpeed: data.wind.speed,
+  clouds: data.clouds.all,
+  description: data.weather[0].description,
+  icon: data.weather[0].icon
+}
+  }
+
 
 
 
