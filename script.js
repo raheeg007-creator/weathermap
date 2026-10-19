@@ -31,7 +31,7 @@ formWeather.addEventListener('submit',async function (event) {
     const weatherData = await getWeatherData(cityCoordinates);
     console.log(weatherData);
   // تحديث موقع الدبوس على الخريطة
-    updatePin(cityCoordinates.lat, cityCoordinates.lon);
+    updatePin(cityCoordinates.lat, cityCoordinates.lon , weatherData ,city);
       // طباعة الخطأ في الـ Console
   } catch (error) {
     console.error('Error fetching weather data:', error);
@@ -88,17 +88,45 @@ async function getWeatherData(cityCoordinates) {
 }
   }
   // دالة لتحديث موقع الدبوس على الخريطة
-  function updatePin(lat, lon) {
+  function updatePin(lat, lon , WeatherData ,) {
   if (pin !== null) {
     pin.remove();
   }
 
   pin = L.marker([lat, lon]).addTo(map);
-
+  pin.bindPopup(createPopup(WeatherData));
   map.flyTo([lat, lon], 8);
+pin.openPopup();
 }
 
+function createPopup(popupData) {
+  const card = document.createElement('div');
+  card.classList.add('popup-card');
 
+  const title = document.createElement('h3');
+  title.textContent = popupData.name;
+  const cover = document.createElement('img');
+  cover.src = `https://openweathermap.org/img/wn/${popupData.icon}@2x.png`;
+  cover.alt = popupData.description;
+   const tempText = document.createElement('p');
+    tempText.textContent = `Temperature: ${popupData.temp}°C`;
+        const humidityText = document.createElement('p');
+    humidityText.textContent = `Humidity: ${popupData.humidity}%`;
+        const windText = document.createElement('p');
+    windText.textContent = `Wind Speed: ${popupData.windSpeed} m/s`;
+        const cloudsText = document.createElement('p');
+    cloudsText.textContent = `Clouds: ${popupData.clouds}%`;
+  const shareBtn = document.createElement('button');
+  shareBtn.textContent = 'Share';
+  shareBtn.addEventListener('click', function () {
+    console.log('share clicked');
+   
+
+  });
+
+  card.append(title, cover, tempText, humidityText, windText, cloudsText ,shareBtn );
+  return card;
+}
 
 
 
