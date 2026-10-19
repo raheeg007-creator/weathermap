@@ -1,4 +1,5 @@
 const API_KEY = '868ff817f39bfd9eca2e584bd870a1de';
+let pin = null;
 const map = L.map('map').setView([15.5007, 32.5599], 6);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
@@ -29,6 +30,8 @@ formWeather.addEventListener('submit',async function (event) {
   // الطلب الثاني: الحصول على الطقس بعد نجاح الأول
     const weatherData = await getWeatherData(cityCoordinates);
     console.log(weatherData);
+  // تحديث موقع الدبوس على الخريطة
+    updatePin(cityCoordinates.lat, cityCoordinates.lon);
       // طباعة الخطأ في الـ Console
   } catch (error) {
     console.error('Error fetching weather data:', error);
@@ -84,7 +87,16 @@ async function getWeatherData(cityCoordinates) {
   icon: data.weather[0].icon
 }
   }
+  // دالة لتحديث موقع الدبوس على الخريطة
+  function updatePin(lat, lon) {
+  if (pin !== null) {
+    pin.remove();
+  }
 
+  pin = L.marker([lat, lon]).addTo(map);
+
+  map.flyTo([lat, lon], 8);
+}
 
 
 
