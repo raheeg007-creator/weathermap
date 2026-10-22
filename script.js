@@ -31,7 +31,7 @@ formWeather.addEventListener('submit',async function (event) {
     const weatherData = await getWeatherData(cityCoordinates);
     console.log(weatherData);
   // تحديث موقع الدبوس على الخريطة
-    updatePin(cityCoordinates.lat, cityCoordinates.lon , weatherData ,city);
+    updatePin(cityCoordinates.lat, cityCoordinates.lon , weatherData , city);
       // طباعة الخطأ في الـ Console
   } catch (error) {
     console.error('Error fetching weather data:', error);
@@ -88,42 +88,53 @@ async function getWeatherData(cityCoordinates) {
 }
   }
   // دالة لتحديث موقع الدبوس على الخريطة
-  function updatePin(lat, lon , WeatherData ,) {
+  function updatePin(lat, lon , WeatherData ,searchedName) {
   if (pin !== null) {
     pin.remove();
   }
-
+// إنشاء دبوس جديد على الخريطة وربطه ببيانات الطقس
   pin = L.marker([lat, lon]).addTo(map);
-  pin.bindPopup(createPopup(WeatherData));
-  map.flyTo([lat, lon], 8);
-pin.openPopup();
-}
+  pin.bindPopup(createPopup(WeatherData ,searchedName)).openPopup();
+  map.flyTo([lat, lon], 10); 
+  pin.openPopup();
 
-function createPopup(popupData) {
+
+}
+// دالة لإنشاء نافذة منبثقة تعرض بيانات الطقس
+function createPopup(popupData ,searchedName) {
   const card = document.createElement('div');
   card.classList.add('popup-card');
-
+  // إنشاء عناصر HTML لعرض بيانات الطقس
+   // إنشاء عنوان وغطاء وصورة الطقس
   const title = document.createElement('h3');
-  title.textContent = popupData.name;
+    title.classList.add('popup-title');
+  title.textContent = searchedName;
   const cover = document.createElement('img');
+    cover.classList.add('popup-cover');
+ // استخدام أيقونة الطقس من OpenWeatherMap
   cover.src = `https://openweathermap.org/img/wn/${popupData.icon}@2x.png`;
   cover.alt = popupData.description;
+ // إنشاء عناصر نصية لعرض درجة الحرارة والرطوبة وسرعة الرياح وغيوم السماء
    const tempText = document.createElement('p');
+    tempText.classList.add('popup-text');
     tempText.textContent = `Temperature: ${popupData.temp}°C`;
         const humidityText = document.createElement('p');
+    humidityText.classList.add('popup-text');
     humidityText.textContent = `Humidity: ${popupData.humidity}%`;
         const windText = document.createElement('p');
+    windText.classList.add('popup-text');
     windText.textContent = `Wind Speed: ${popupData.windSpeed} m/s`;
         const cloudsText = document.createElement('p');
+    cloudsText.classList.add('popup-text');
     cloudsText.textContent = `Clouds: ${popupData.clouds}%`;
+  // إنشاء زر للمشاركة
   const shareBtn = document.createElement('button');
+  shareBtn.classList.add('popup-shareBtn');
   shareBtn.textContent = 'Share';
   shareBtn.addEventListener('click', function () {
     console.log('share clicked');
-   
-
   });
-
+// إضافة جميع العناصر إلى البطاقة
   card.append(title, cover, tempText, humidityText, windText, cloudsText ,shareBtn );
   return card;
 }
