@@ -155,4 +155,48 @@ h1 {
     max-width: 700px;
   }
 }
-   
+.popup-card .popup-text {
+   margin: 2px 0; 
+  color: #34383b;
+  background-color: #e8f1fb;
+  border-radius: 7px;
+  padding: 4px 8px;
+  font-size: .8rem;
+  text-align: center;
+  
+  }
+.popup-title {
+  font-size: .9rem;
+  font-weight: 600;
+  margin: 1px 0;
+  text-align: center;
+  border-radius: 7px;
+ }
+ 
+.popup-cover{
+  width: 30px;
+  display: block;
+  margin: 0 auto;
+  background-color: #92bced;
+  border-radius: 7px;
+  padding: 4px 8px;
+
+ }
+.popup-shareBtn {
+  background-color: #4e79cd;
+  color: #fffefe;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+ }
+.popup-shareBtn:hover {
+  border-color: #7fb9d6;
+}
+
+.popup-shareBtn:focus {
+  box-shadow: 0 0 6px rgba(44, 146, 193, 0.4);
+}
