@@ -8,33 +8,36 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 const formWeather = document.getElementById('search-form');
 const inputCity = document.getElementById('city-input');
-formWeather.addEventListener('submit',async function (event) {
-   // منع الصفحة من إعادة التحميل
+// إضافة مستمع الحدث للنموذج عند الإرسال
+formWeather.addEventListener('submit', async function (event) {
   event.preventDefault();
-    // قراءة اسم المدينة وحذف المسافات الزائدة
   const city = inputCity.value.trim();
-    // الإيقاف إذا كان الحقل فارغ
   if (city === '') {
-   return;
- }
+    return;
+  }
 
- // تجربة الطلبين بالتتابع مع التقاط أي خطأ
- try {
-    // الطلب الأول: الحصول على الإحداثيات
+  // 1. إخفاء الرسالة القديمة وإظهار الـ spinner
+  hideMessage();
+  showSpinner();
+
+  try {
     const cityCoordinates = await getCityCoordinates(city);
-      // إيقاف التنفيذ إذا لم توجد المدينة
+
     if (cityCoordinates === null) {
-      console.log('City not found');
+      // 2. كارد بدل console.log
+      showMessage('City not found', 'error');
       return;
     }
-  // الطلب الثاني: الحصول على الطقس بعد نجاح الأول
+
     const weatherData = await getWeatherData(cityCoordinates);
-    console.log(weatherData);
-  // تحديث موقع الدبوس على الخريطة
-    updatePin(cityCoordinates.lat, cityCoordinates.lon , weatherData , city);
-      // طباعة الخطأ في الـ Console
+    updatePin(cityCoordinates.lat, cityCoordinates.lon, weatherData, city);
   } catch (error) {
-    console.error('Error fetching weather data:', error);
+    // 3. كارد خطأ ودي بدل console.error
+    showMessage('Error fetching weather data', 'error');
+    console.error(error);
+  } finally {
+    // 4. إخفاء الـ spinner
+    hideSpinner();
   }
 });
 
@@ -138,6 +141,27 @@ function createPopup(popupData ,searchedName) {
   card.append(title, cover, tempText, humidityText, windText, cloudsText ,shareBtn );
   return card;
 }
+ // دالة لإظهار رسالة خطأ 
+const messageBox = document.getElementById('message-box');
+const spinner = document.getElementById('loader');
+function showMessage(text, type) {
+  messageBox.textContent = text;
+  messageBox.classList.remove('error', 'info');
+  messageBox.classList.add(type);
+  messageBox.classList.add('visible');
+}
+  // دالة لإظهار الـ spinner
+  function showSpinner() {
+  spinner.classList.add('visible');
+}
+// دالة لإخفاء الـ spinner
+function hideSpinner() {
+  spinner.classList.remove('visible');
+}
 
-
+// دالة لإخفاء رسالة الخطأ 
+function hideMessage() {
+  messageBox.classList.remove('visible');
+}
+//
 
