@@ -44,8 +44,9 @@ formWeather.addEventListener('submit', async function (event) {
   // دالة تحوّل اسم المدينة إلى إحداثيات باستخدام Nominatim
 
  async function getCityCoordinates(cityName) {
+  
   // بناء رابط البحث مع تشفير اسم المدينة لتفادي مشاكل المسافات والحروف العربية
-  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(cityName)}`;
+  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&featuretype=city&q=${encodeURIComponent(cityName)}`;
   // إرسال الطلب وانتظار الرد
   const response = await fetch(url);
 
@@ -97,10 +98,11 @@ async function getWeatherData(cityCoordinates) {
   }
 // إنشاء دبوس جديد على الخريطة وربطه ببيانات الطقس
   pin = L.marker([lat, lon]).addTo(map);
-  pin.bindPopup(createPopup(WeatherData ,searchedName)).openPopup();
-  map.flyTo([lat, lon], 10); 
+  pin.bindPopup(createPopup(WeatherData, searchedName), { autoPanPadding: [20, 20] });
+  map.flyTo([lat, lon], 7); 
+ map.once('moveend', function () {
   pin.openPopup();
-
+});
 
 }
 // دالة لإنشاء نافذة منبثقة تعرض بيانات الطقس
