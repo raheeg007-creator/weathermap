@@ -16,24 +16,24 @@ formWeather.addEventListener('submit', async function (event) {
     return;
   }
 
-  // 1. إخفاء الرسالة القديمة وإظهار الـ spinner
+  //  إخفاء الرسالة القديمة وإظهار الـ spinner
   hideMessage();
   showSpinner();
-
+//  استخدام try-catch-finally للتعامل مع الأخطاء
   try {
     const cityCoordinates = await getCityCoordinates(city);
 
     if (cityCoordinates === null) {
-      // 2. كارد بدل console.log
-      showMessage('City not found', 'error');
-      return;
+// إظهار رسالة خطأ إذا لم يتم العثور على المدينة
+    showMessage('City not found', 'error');      
+    return;
     }
 
     const weatherData = await getWeatherData(cityCoordinates);
     updatePin(cityCoordinates.lat, cityCoordinates.lon, weatherData, city);
   } catch (error) {
     // 3. كارد خطأ ودي بدل console.error
-    showMessage('Error fetching weather data', 'error');
+    showMessage(error.message, 'error');
     console.error(error);
   } finally {
     // 4. إخفاء الـ spinner
@@ -77,8 +77,11 @@ async function getWeatherData(cityCoordinates) {
     //  خطأ إذا فشل الطلب
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error('Weather request failed');
+  if (response.status === 404) {
+    throw new Error(' Weather data not found for the given coordinates');
   }
+  throw new Error('Weather request failed');
+}
     // استخراج القيم المطلوبة فقط من الرد المتداخل
   const data = await response.json();
   return {
