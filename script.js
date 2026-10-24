@@ -136,9 +136,23 @@ function createPopup(popupData ,searchedName) {
   const shareBtn = document.createElement('button');
   shareBtn.classList.add('popup-shareBtn');
   shareBtn.textContent = 'Share';
-  shareBtn.addEventListener('click', function () {
-    console.log('share clicked');
-  });
+  // إضافة مستمع الحدث للزر للمشاركة
+  shareBtn.addEventListener('click', async function () {
+    // إنشاء نص المشاركة باستخدام بيانات الطقس
+  const shareText = `${searchedName} - 
+   Temperature: ${popupData.temp}°C,
+   Humidity: ${popupData.humidity}%,
+   Wind Speed: ${popupData.windSpeed} m/s,
+   Clouds: ${popupData.clouds}%,
+   Description: ${popupData.description}`;
+  // محاولة نسخ النص إلى الحافظة
+  try {
+    await navigator.clipboard.writeText(shareText);
+    showMessage('Text copied to clipboard!', 'info');
+  } catch (error) {
+    showMessage('Failed to copy text.', 'error');
+  }
+});
 // إضافة جميع العناصر إلى البطاقة
   card.append(title, cover, tempText, humidityText, windText, cloudsText ,shareBtn );
   return card;
